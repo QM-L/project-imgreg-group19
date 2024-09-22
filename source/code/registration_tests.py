@@ -323,3 +323,7 @@ def registration_metrics_demo(use_t2=False):
         im2.set_data(J)
 
         display(fig)
+
+
+def affine_registration_test():
+    

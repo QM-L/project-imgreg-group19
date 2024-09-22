@@ -176,8 +176,8 @@ def correlation(I, J):
     u = u - u.mean(keepdims=True)
     v = v - v.mean(keepdims=True)   
 
-    CC = np.dot(u.T,v)/np.dot(np.sqrt(np.dot(u.T,u)).T,np.sqrt(np.dot(v.T,v)))
-
+    CC = np.dot(u.T,v)/(np.sqrt(np.dot(u.T,u)).T*np.sqrt(np.dot(v.T,v)))
+    print(f'CC={CC}')
     return CC
 
 
@@ -375,15 +375,16 @@ def affine_corr(I, Im, x, return_transform=True):
     # C - normalized cross-correlation between I and T(Im)
     # Im_t - transformed moving image T(Im)
     # Th - transformation matrix (only returned if return_transform=True)
-    
-    NUM_BINS = 64
-    SCALING = 100
 
-    #------------------------------------------------------------------#
-    # TODO: Implement the missing functionality
-    #------------------------------------------------------------------#
-    C, Im_t, Th = 0,0,0
-    
+    # rotate, scale, transform
+    rot_mat = rotate(x[0])
+    scale_mat = scale(x[1],x[2])
+    shear_mat = shear(x[3],x[4])
+    combo_mat = np.matmul(rot_mat,scale_mat,shear_mat)
+    Th = util.t2h(combo_mat, x[5:])
+    Im_t, Xt = image_transform(Im, Th)
+    C = correlation(I,Im_t)
+
     if return_transform:
         return C, Im_t, Th
     else:
@@ -409,11 +410,18 @@ def affine_mi(I, Im, x, return_transform=True):
 
     NUM_BINS = 64
     SCALING = 100
-    
-    #------------------------------------------------------------------#
-    # TODO: Implement the missing functionality
-    #------------------------------------------------------------------#
-    C, Im_t,Th = 0,0,0
+
+    # rotate, scale, transform
+    rot_mat = rotate(x[0])
+    scale_mat = scale(x[1],x[2])
+    combo_mat = np.matmul(rot_mat,scale_mat)
+    Th = util.t2h(combo_mat, x[3:]*SCALING)
+    Im_t, Xt = image_transform(Im, Th)
+
+    # compute the similarity between the fixed and transformed
+    # moving image
+    joint = joint_histogram(I,Im_t,NUM_BINS)
+    C = mutual_information(joint)
 
     if return_transform:
         return C, Im_t, Th
