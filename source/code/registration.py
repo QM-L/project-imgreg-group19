@@ -5,6 +5,7 @@ Registration module main code.
 import numpy as np
 from scipy import ndimage
 import registration_util as util
+import time
 
 # SECTION 1. Geometrical transformations
 
@@ -177,7 +178,6 @@ def correlation(I, J):
     v = v - v.mean(keepdims=True)   
 
     CC = np.dot(u.T,v)/(np.sqrt(np.dot(u.T,u)).T*np.sqrt(np.dot(v.T,v)))
-    print(f'CC={CC}')
     return CC
 
 
@@ -218,10 +218,9 @@ def joint_histogram(I, J, num_bins=16, minmax_range=None):
     # initialize the joint histogram to all zeros
     p = np.zeros(hist_size)
 
-    for k in range(n):
-        p[I[k], J[k]] = p[I[k], J[k]] + 1
-
-    p = p/n
+    p, _, _ = np.histogram2d(I.ravel(), J.ravel(), bins=num_bins, range=[[0, num_bins-1], [0, num_bins-1]])
+    # Normalize the histogram
+    p = p / p.sum()
 
     return p
 
@@ -246,12 +245,7 @@ def mutual_information(p):
     p_J = np.sum(p, axis=0)
     p_J = p_J.reshape(1, -1)
 
-    n = p_I.shape[0]
-    MI = 0
-    for i in range(n):
-        for j in range(n):
-            MI += p[i,j]*np.log(p[i,j]/np.dot(p_I[i,:],p_J[:,j]))
-
+    MI = np.sum(np.sum(p * np.log(p/(np.dot(p_I, p_J)+EPSILON)+EPSILON)))
     return MI
 
 
@@ -289,6 +283,9 @@ def mutual_information_e(p):
         for j in  range(n):
             e_IJ -= p[i,j]*np.log(p[i,j])
 
+    # calculate entropies with sums
+    
+
     # calculate MI_e
     MI = e_J + e_I - e_IJ
 
@@ -306,12 +303,13 @@ def ngradient(fun, x, h=1e-3):
     # h - a small positive number used in the finite difference formula
     # Output:
     # g - vector of partial derivatives (gradient) of fun
-
+    
     g = np.zeros_like(x)
 
     for index,value in enumerate(x):
         g[index] = (fun(x+h/2)-fun(x-h/2))/h
-
+    
+    
     return g
 
 
@@ -409,13 +407,13 @@ def affine_mi(I, Im, x, return_transform=True):
     # Th - transformation matrix (only returned if return_transform=True)
 
     NUM_BINS = 64
-    SCALING = 100
 
     # rotate, scale, transform
     rot_mat = rotate(x[0])
     scale_mat = scale(x[1],x[2])
-    combo_mat = np.matmul(rot_mat,scale_mat)
-    Th = util.t2h(combo_mat, x[3:]*SCALING)
+    shear_mat = shear(x[3],x[4])
+    combo_mat = np.matmul(rot_mat,scale_mat,shear_mat)
+    Th = util.t2h(combo_mat, x[5:])
     Im_t, Xt = image_transform(Im, Th)
 
     # compute the similarity between the fixed and transformed
