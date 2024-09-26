@@ -177,8 +177,8 @@ def correlation(I, J):
     u = u - u.mean(keepdims=True)
     v = v - v.mean(keepdims=True)   
 
-    CC = np.dot(u.T,v)/(np.sqrt(np.dot(u.T,u)).T*np.sqrt(np.dot(v.T,v)))
-    return CC
+    CC = np.dot(u.T,v)/np.dot(np.sqrt(np.dot(u.T,u)),np.sqrt(np.dot(v.T,v)))
+    return CC.sum()
 
 
 def joint_histogram(I, J, num_bins=16, minmax_range=None):

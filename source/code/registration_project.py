@@ -8,12 +8,12 @@ import registration as reg
 from IPython.display import display, clear_output
 
 
-def intensity_based_registration_demo():
+def rigid_reg_cc_demo(Img1,Img2):
 
     # read the fixed and moving images
     # change these in order to read different images
-    I = plt.imread('../data/image_data/1_1_t1.tif')
-    Im = plt.imread('../data/image_data/1_1_t1_d.tif')
+    I = plt.imread(Img1)
+    Im = plt.imread(Img2)
 
     # initial values for the parameters
     # we start with the identity transformation
@@ -64,6 +64,7 @@ def intensity_based_registration_demo():
     ax2.grid()
 
     # perform 'num_iter' gradient ascent updates
+    past_s = [0,0,0,0,0]
     for k in np.arange(num_iter):
 
         # gradient ascent
@@ -84,6 +85,17 @@ def intensity_based_registration_demo():
         learning_curve.set_ydata(similarity)
 
         display(fig)
+
+        # End if: similarity is high, or if stability has been reached
+        past_s.append(S)
+        del past_s[0]
+        print(past_s)
+        var = np.var(past_s)
+        if k > 5 and S > 0.99:
+            break
+        if k > 5 and var < 1e-7:
+            break
+
     print(f'Final similarity of ca. {S}')
 
 def affine_reg_cc_demo(img1,img2,num_iter=200, learning_rate=0.001):
