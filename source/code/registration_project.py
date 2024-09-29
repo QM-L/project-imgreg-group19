@@ -3,6 +3,7 @@ Project code for image registration topics.
 """
 
 import numpy as np
+import median from statistics
 import matplotlib.pyplot as plt
 import registration as reg
 from IPython.display import display, clear_output
@@ -259,3 +260,8 @@ def affine_reg_mi_demo(img1,img2,num_iter=200, learning_rate=0.001):
         if k > 5 and var < 1e-7:
             break
     print(f'Final similarity of ca. {S} with variance {var}')
+
+def absolute_error_histograms(A, G = [])
+    for i in A:
+        G.append(abs(i - median(A)))
+    
