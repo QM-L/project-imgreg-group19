@@ -222,7 +222,7 @@ def joint_histogram(I, J, num_bins=16, minmax_range=None):
     # Normalize the histogram
     p = p / p.sum()
 
-    return p
+    return p, J, I
 
 
 def mutual_information(p):
