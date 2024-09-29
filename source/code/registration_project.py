@@ -174,6 +174,7 @@ def affine_reg_cc_demo(img1,img2,num_iter=200, learning_rate=0.001):
         display(fig)
 
     print(f'Final similarity of ca. {S}')
+    return similarity
 
 def affine_reg_mi_demo(img1,img2,num_iter=200, learning_rate=0.001):
 
@@ -261,7 +262,7 @@ def affine_reg_mi_demo(img1,img2,num_iter=200, learning_rate=0.001):
             break
     print(f'Final similarity of ca. {S} with variance {var}')
 
-def absolute_error_histograms(A, G = []):
+def absolute_error_histograms(A = similarity, G = []):
     for i in A:
         G.append(abs(i - median(A)))
     x_list = [x for x in range(len(G))]
