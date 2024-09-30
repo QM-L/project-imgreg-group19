@@ -1,0 +1,6 @@
+%%scalene --reduced-profile --outfile reg_cc_test.txt
+## 2: Affine intensity-based registration of two T1 slices (e.g. `1_1_t1.tif` and `1_1_t1_d.tif`) 
+# using normalized cross-correlation as a similarity measure.
+from registration_project import affine_reg_cc_demo
+
+affine_reg_cc_demo(r"../data/image_data/1_1_t1.tif",r"../data/image_data/1_1_t1_d.tif",False)
