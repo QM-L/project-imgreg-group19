@@ -93,7 +93,6 @@ def rigid_reg_cc_demo(Img1,Img2,imshow=False):
         # End if: similarity is high, or if stability has been reached
         past_s.append(S)
         del past_s[0]
-        print(past_s)
         var = np.var(past_s)
         if k > 5 and S > 0.99:
             break
