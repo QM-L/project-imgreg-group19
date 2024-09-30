@@ -275,3 +275,4 @@ def absolute_error_histograms(J, I, G = [], A = []):
     x_list = [x for x in range(len(G))]
     plt.plot(x_list, G)
     plt.show()
+    return G
