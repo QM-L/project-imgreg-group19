@@ -100,6 +100,7 @@ def rigid_reg_cc_demo(Img1,Img2,imshow=False):
             break
 
     print(f'Final similarity of ca. {S}')
+    return x
 
 def affine_reg_cc_demo(img1,img2,imshow=False,num_iter=200, learning_rate=0.001):
 
@@ -176,7 +177,7 @@ def affine_reg_cc_demo(img1,img2,imshow=False,num_iter=200, learning_rate=0.001)
             display(fig)
         similarity[k] = S  
     print(f'Final similarity of ca. {S}')
-    return similarity
+    return x
 
 def affine_reg_mi_demo(img1,img2,imshow=False,num_iter=200, learning_rate=0.001):
 
@@ -264,6 +265,7 @@ def affine_reg_mi_demo(img1,img2,imshow=False,num_iter=200, learning_rate=0.001)
         if k > 5 and var < 1e-7:
             break
     print(f'Final similarity of ca. {S} with variance {var}')
+    return x
 
 def absolute_error_histograms(J, I,imshow=False):
     A = []                    #empty list to add the differences between I and J in per index(value)
@@ -276,8 +278,8 @@ def absolute_error_histograms(J, I,imshow=False):
         plt.plot(xs, A)
         plt.show()
     
-    for i in A:                #Calculate the mean error by adding all the values of a and dividing this by the amount of elements in A
-        G += A[i]
+    for value in A:                #Calculate the mean error by adding all the values of a and dividing this by the amount of elements in A
+        G += value
     G = G/len(A)
     return G                    #G will then be the absolute mean error
 #absolute_error_histograms(J = [2,6,7,9,3,2,4], I = [3,8,5,7,6,4,9])
