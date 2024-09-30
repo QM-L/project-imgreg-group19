@@ -270,6 +270,10 @@ def absolute_error_histograms(J, I):
     G = 0
     for i in range(len(J)):    #Add de difference between J and I for every index point to the list A, for optional plots, and take the absolute of this difference(no negatives)
         A.append(abs(J[i]-I[i]))
+
+    xs = [x for x in range(len(A))]    #Plot the absolute error per value of J and I of the same index (optional)
+    plt.plot(xs, A)
+    plt.show()
     
     for i in A:                #Calculate the mean error by adding all the values of a and dividing this by the amount of elements in A
         G += A[i]
