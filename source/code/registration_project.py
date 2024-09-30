@@ -265,15 +265,16 @@ def affine_reg_mi_demo(img1,img2,imshow=False,num_iter=200, learning_rate=0.001)
             break
     print(f'Final similarity of ca. {S} with variance {var}')
 
-def absolute_error_histograms(J, I):
+def absolute_error_histograms(J, I,imshow=False):
     A = []                    #empty list to add the differences between I and J in per index(value)
     G = 0
     for i in range(len(J)):    #Add de difference between J and I for every index point to the list A, for optional plots, and take the absolute of this difference(no negatives)
         A.append(abs(J[i]-I[i]))
 
-    xs = [x for x in range(len(A))]    #Plot the absolute error per value of J and I of the same index (optional)
-    plt.plot(xs, A)
-    plt.show()
+    if imshow:
+        xs = [x for x in range(len(A))]    #Plot the absolute error per value of J and I of the same index (optional)
+        plt.plot(xs, A)
+        plt.show()
     
     for i in A:                #Calculate the mean error by adding all the values of a and dividing this by the amount of elements in A
         G += A[i]
