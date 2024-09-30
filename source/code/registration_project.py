@@ -265,13 +265,12 @@ def affine_reg_mi_demo(img1,img2,imshow=False,num_iter=200, learning_rate=0.001)
             break
     print(f'Final similarity of ca. {S} with variance {var}')
 
-def absolute_error_histograms(J, I, G = [], A = []):
+def absolute_error_histograms(J, I):
+A = []
     for i in range(len(J)):
         A.append(abs(J[i]-I[i]))
     
     for i in A:
-        G.append(abs(i - median(A)))
-    x_list = [x for x in range(len(G))]
-    plt.plot(x_list, G)
-    plt.show()
+        G += A(i)
+    G = G/len(A)
     return G
